@@ -68,4 +68,46 @@ abstract class RepositoryModule {
     abstract fun bindFavoriteRepository(
         impl: FavoriteRepositoryImpl
     ): FavoriteRepository
+    @Singleton
+    @Binds
+    abstract fun bindOrderRepository(
+        impl: OrderRepositoryImpl
+    ): OrderRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindCommentCacheRepository(
+        impl: CommentCacheRepositoryImpl
+    ): CommentCacheRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindCommentRepository(
+        impl: CommentRepositoryImpl
+    ): CommentRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindProductCacheRepository(
+        impl: ProductCacheRepositoryImpl
+    ): ProductCacheRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindCategoryCacheRepository(
+        impl: CategoryCacheRepositoryImpl
+    ): CategoryCacheRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindFeedbackRepository(
+        impl: FeedbackRepositoryImpl
+    ): FeedbackRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindOrderCacheRepository(
+        impl: OrderCacheRepositoryImpl
+    ): OrderCacheRepository
+
 }
