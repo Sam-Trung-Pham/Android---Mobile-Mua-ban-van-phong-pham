@@ -20,3 +20,30 @@ enum class TypeSettingItem() {
     SETTING,
     HELP
 }
+data class SettingItem(
+    val id: Int = 0,
+    val titleRes: Int = 0,
+    val cat: com.datn.bia.a.domain.model.domain.TypeSettingItem = com.datn.bia.a.domain.model.domain.TypeSettingItem.MY_ACCOUNT
+) {
+    companion object {
+        fun getSettingItemTypeAccount() = listOf(
+            SettingItem(0, R.string.account_and_security),
+            SettingItem(1, R.string.address),
+            SettingItem(2, R.string.account_and_bank_card),
+        )
+
+        fun getSettingItemTypeSetting() = listOf(
+            SettingItem(3, R.string.chat_setting, com.datn.bia.a.domain.model.domain.TypeSettingItem.SETTING),
+            SettingItem(4, R.string.notification_setting, com.datn.bia.a.domain.model.domain.TypeSettingItem.SETTING),
+            SettingItem(5, R.string.privacy_policy, com.datn.bia.a.domain.model.domain.TypeSettingItem.SETTING),
+            SettingItem(6, R.string.language, com.datn.bia.a.domain.model.domain.TypeSettingItem.SETTING),
+        )
+
+        fun getSettingItemTypeHelp() = listOf(
+            SettingItem(7, R.string.support_center, com.datn.bia.a.domain.model.domain.TypeSettingItem.HELP),
+            SettingItem(8, R.string.community_standards, com.datn.bia.a.domain.model.domain.TypeSettingItem.HELP),
+            SettingItem(9, R.string.about_us, com.datn.bia.a.domain.model.domain.TypeSettingItem.HELP),
+            SettingItem(10, R.string.language, com.datn.bia.a.domain.model.domain.TypeSettingItem.HELP)
+        )
+    }
+}
