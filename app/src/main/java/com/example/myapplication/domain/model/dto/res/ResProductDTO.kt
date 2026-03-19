@@ -25,4 +25,16 @@ data class ResProductDataDTO(
     val createdAt: String? = null,
     val updatedAt: String? = null,
     val discount: Int? = null
+)data class ResCatProductDTO(
+    @SerializedName("_id")
+    val id: String? = null,
+    val name: String? = null
+)
+
+data class ResVariantDTO(
+    val color: String? = null,
+    val price: Double? = null,
+    val quantity: Int? = null,
+    val status: Boolean? = null,
+    val _id: String? = null
 )
