@@ -30,3 +30,54 @@ fun View.setOnCustomTouchView(onCustomTouchListener: OnCustomTouchListener?) {
         }
     })
 }
+fun View.setOnCustomTouchViewScale(customClickListener: OnCustomClickListener?) {
+    setOnCustomTouchView(object : OnCustomTouchListener {
+        private fun setScale(scale: Float) {
+            scaleX = scale
+            scaleY = scale
+        }
+
+        override fun onCustomTouchDown(view: View, event: MotionEvent) {
+            setScale(0.9f)
+        }
+
+        override fun onCustomTouchMoveOut(view: View, event: MotionEvent) {
+            setScale(1f)
+        }
+
+        override fun onCustomTouchUp(view: View, event: MotionEvent) {
+            setScale(1f)
+            customClickListener?.onCustomClick(view, event)
+        }
+
+        override fun onCustomTouchOther(view: View, event: MotionEvent) {
+            setScale(1f)
+        }
+    })
+}
+
+fun View.setOnCustomTouchViewScaleNotOther(customClickListener: OnCustomClickListener?) {
+    setOnCustomTouchView(object : OnCustomTouchListener {
+        private fun setScale(scale: Float) {
+            scaleX = scale
+            scaleY = scale
+        }
+
+        override fun onCustomTouchDown(view: View, event: MotionEvent) {
+            setScale(0.9f)
+        }
+
+        override fun onCustomTouchMoveOut(view: View, event: MotionEvent) {
+            setScale(1f)
+        }
+
+        override fun onCustomTouchUp(view: View, event: MotionEvent) {
+            setScale(1f)
+            customClickListener?.onCustomClick(view, event)
+        }
+
+        override fun onCustomTouchOther(view: View, event: MotionEvent) {
+
+        }
+    })
+}
