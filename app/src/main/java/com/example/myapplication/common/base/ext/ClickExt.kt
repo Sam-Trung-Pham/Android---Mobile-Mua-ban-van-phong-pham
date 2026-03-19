@@ -81,3 +81,45 @@ fun View.setOnCustomTouchViewScaleNotOther(customClickListener: OnCustomClickLis
         }
     })
 }
+fun View.setOnCustomTouchViewAlphaNotOther(customClickListener: OnCustomClickListener?) {
+    setOnCustomTouchView(object : OnCustomTouchListener {
+        var isTouchDown = false
+        var isTouchMoveOutAndUp = false
+        private fun setAlpha(ap: Float) {
+            alpha = ap
+        }
+
+        override fun onCustomTouchDown(view: View, event: MotionEvent) {
+            isTouchDown = true
+            setAlpha(0.7f)
+        }
+
+        override fun onCustomTouchMoveOut(view: View, event: MotionEvent) {
+            isTouchMoveOutAndUp = true
+            setAlpha(1f)
+        }
+
+        override fun onCustomTouchUp(view: View, event: MotionEvent) {
+            isTouchMoveOutAndUp = true
+            setAlpha(1f)
+            customClickListener?.onCustomClick(view, event)
+        }
+
+        override fun onCustomTouchOther(view: View, event: MotionEvent) {
+            if (!isTouchMoveOutAndUp && isTouchDown) setAlpha(1f)
+            isTouchDown = false
+            isTouchMoveOutAndUp = false
+        }
+    })
+}
+
+interface OnCustomTouchListener {
+    fun onCustomTouchDown(view: View, event: MotionEvent)
+    fun onCustomTouchMoveOut(view: View, event: MotionEvent)
+    fun onCustomTouchUp(view: View, event: MotionEvent)
+    fun onCustomTouchOther(view: View, event: MotionEvent)
+}
+
+interface OnCustomClickListener {
+    fun onCustomClick(view: View, event: MotionEvent)
+}
