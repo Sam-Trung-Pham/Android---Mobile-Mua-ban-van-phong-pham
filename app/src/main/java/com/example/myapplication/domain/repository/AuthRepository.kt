@@ -19,6 +19,23 @@ interface AuthRepository {
         req: ReqSignUpUserDTO
     ): ResultWrapper<ResSignUpUserDTO>
     //`feat: thêm interface AuthRepository cho đăng nhập và đăng ký người dùng`
+    suspend fun updatePhoneNumber(
+        orderId: String,
+        req: ReqUpdatePhoneDTO
+    ): ResultWrapper<ResUpdatePhoneDTO>
 
+    suspend fun updateAddress(
+        id: String,
+        req: ReqUpdateAddressDTO
+    ): ResultWrapper<ResUpdatePhoneDTO>
+
+    suspend fun forgotPassword(
+        req: ReqForgotPass
+    ): ResultWrapper<ResForgotPass>
+
+    suspend fun resetPassword(
+        req: ReqResetPass,
+        token: String
+    ): ResultWrapper<ResResetPass>
     //`feat: bổ sung chức năng cập nhật thông tin và khôi phục mật khẩu trong AuthRepository`
 }
