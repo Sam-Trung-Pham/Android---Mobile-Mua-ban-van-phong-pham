@@ -78,3 +78,59 @@ fun ImageView.loadImage(
         })
         .into(this)
 }
+fun ImageView.loadImage(
+    context: Context,
+    path: Any,
+    placeHolderRes: Int = 0,
+    errorImgRes: Int = 0,
+    isCache: Boolean = true,
+    loadingView: View? = null,
+    requestOptions: RequestOptions? = null,
+    bitmapTransformation: BitmapTransformation = CenterInside(),
+    onLoading: (() -> Unit)? = null,
+    onLoadSuccess: ((resource: Drawable) -> Unit)? = null,
+    onLoadError: ((e: GlideException?, isFinishRes: Boolean) -> Unit)? = null,
+) {
+    onLoading?.invoke()
+    loadingView?.visibleView()
+
+    val options: RequestOptions = RequestOptions()
+        .diskCacheStrategy(if (isCache) DiskCacheStrategy.ALL else DiskCacheStrategy.NONE)
+        .placeholder(placeHolderRes)
+        .error(errorImgRes)
+        .fitCenter()
+        .apply(RequestOptions().transform(bitmapTransformation))
+
+    Glide.with(context)
+        .load(path)
+        .apply(requestOptions ?: options)
+        .listener(object: RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>,
+                isFirstResource: Boolean
+            ): Boolean {
+                loadingView?.goneView()
+                onLoadError?.invoke(e, isFirstResource)
+
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable,
+                model: Any,
+                target: Target<Drawable>?,
+                dataSource: DataSource,
+                isFirstResource: Boolean
+            ): Boolean {
+                this@loadImage.setImageDrawable(resource)
+
+                loadingView?.goneView()
+                onLoadSuccess?.invoke(resource)
+
+                return false
+            }
+        })
+        .into(this)
+}
