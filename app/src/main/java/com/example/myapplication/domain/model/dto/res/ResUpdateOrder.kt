@@ -20,12 +20,12 @@ data class ResUpdateOrder(
     val voucherId: String? = null
 )
 // feat: thêm response model ResUpdateOrder cho cập nhật đơn hàng
-//data class Product(
-//    val _id: String? = null,
-//    val name: String? = null,
-//    val priceAfterDis: Double? = null,
-//    val priceBeforeDis: Double? = null,
-//    val productId: String? = null,
-//    val quantity: Int? = null
-//)
+data class Product(
+    val _id: String? = null,
+    val name: String? = null,
+    val priceAfterDis: Double? = null,
+    val priceBeforeDis: Double? = null,
+    val productId: String? = null,
+    val quantity: Int? = null
+)
 //feat: thêm model Product cho sản phẩm trong cập nhật đơn hàng
