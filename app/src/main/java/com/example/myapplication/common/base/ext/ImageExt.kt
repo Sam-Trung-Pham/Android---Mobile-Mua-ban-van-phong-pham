@@ -180,3 +180,48 @@ fun ImageView.loadImageBitmap(
             }
         })
 }
+fun ImageView.loadImageBitmap(
+    context: Context,
+    path: Any,
+    placeHolderRes: Int = 0,
+    errorImgRes: Int = 0,
+    isCache: Boolean = true,
+    loadingView: View? = null,
+    requestOptions: RequestOptions? = null,
+    bitmapTransformation: BitmapTransformation = CenterInside(),
+    onLoading: (() -> Unit)? = null,
+    onLoadSuccess: ((bitmap: Bitmap) -> Unit)? = null,
+    onLoadError: (() -> Unit)? = null,
+) {
+    onLoading?.invoke()
+    loadingView?.visibleView()
+
+    val options: RequestOptions = RequestOptions()
+        .diskCacheStrategy(if (isCache) DiskCacheStrategy.ALL else DiskCacheStrategy.NONE)
+        .placeholder(placeHolderRes)
+        .error(errorImgRes)
+        .fitCenter()
+        .apply(RequestOptions().transform(bitmapTransformation))
+
+    Glide.with(context)
+        .asBitmap()
+        .load(path)
+        .apply(requestOptions ?: options)
+        .into(object: CustomTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                this@loadImageBitmap.setImageBitmap(resource)
+
+                loadingView?.goneView()
+                onLoadSuccess?.invoke(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) = Unit
+
+            override fun onLoadFailed(errorDrawable: Drawable?) {
+                super.onLoadFailed(errorDrawable)
+
+                loadingView?.goneView()
+                onLoadError?.invoke()
+            }
+        })
+}
