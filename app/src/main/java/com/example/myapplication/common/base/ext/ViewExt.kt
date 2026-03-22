@@ -81,3 +81,24 @@ fun View.clickOpacity(timeDelay: Long = timeDelayDefault, action: (view: View?) 
         }
     })
 }
+fun View.toBitmap(): Bitmap? {
+    if (width > 0 && height > 0) {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        draw(canvas)
+        return bitmap
+    }
+
+    return null
+}
+
+fun View.isKeyboardVisible(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val insets = rootWindowInsets
+        insets?.isVisible(WindowInsets.Type.ime()) ?: false
+    } else {
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        return inputMethodManager?.isActive(this) ?: false
+    }
+}
