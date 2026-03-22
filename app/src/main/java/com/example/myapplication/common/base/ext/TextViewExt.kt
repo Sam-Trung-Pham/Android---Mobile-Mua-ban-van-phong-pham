@@ -39,3 +39,36 @@ fun TextView.removeUnderlines() {
     }
     text = spannable
 }
+fun TextView.setTextColorById(idColor: Int) {
+    setTextColor(ContextCompat.getColor(context, idColor))
+}
+
+fun TextView.scrollTextView() {
+    ellipsize = TextUtils.TruncateAt.MARQUEE
+    marqueeRepeatLimit = -1 // -1 for infinite scroll
+    isSingleLine = true
+    isFocusable = true
+    isFocusableInTouchMode = true
+    isSelected = true
+}
+
+inline fun TextView.doOnTextChanged(
+    crossinline action: (
+        text: CharSequence?,
+        start: Int,
+        before: Int,
+        count: Int
+    ) -> Unit
+): TextWatcher = addTextChangedListener(onTextChanged = action)
+
+fun TextView.selectedTab(context: Context) {
+    val typeface = ResourcesCompat.getFont(context, R.font.inter_semibold)
+    this.typeface = typeface
+    this.setTextColorById(R.color.primary)
+}
+
+fun TextView.unSelectedTab(context: Context) {
+    val typeface = ResourcesCompat.getFont(context, R.font.inter_regular)
+    this.typeface = typeface
+    this.setTextColorById(R.color.textGray)
+}
