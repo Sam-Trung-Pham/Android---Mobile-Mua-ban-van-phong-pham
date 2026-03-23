@@ -72,5 +72,32 @@ class GetAllOrderByIdUseCase @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
     //`feat: thêm GetAllOrderByIdUseCase lấy đơn hàng theo người dùng và đồng bộ cache`
-    
+    fun createChannel(context: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "high_channel",
+                "High Priority",
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel.description = "Heads-up notification"
+
+            val manager = context.getSystemService(NotificationManager::class.java)
+            manager.createNotificationChannel(channel)
+        }
+    }
+
+    fun showNotification(context: Context) {
+        val notification = NotificationCompat.Builder(context, "high_channel")
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle(context.getString(R.string.msg_title_noti))
+            .setContentText(context.getString(R.string.msg_content_noti))
+            // 👇 CỰC KỲ QUAN TRỌNG CHO < ANDROID O
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setDefaults(NotificationCompat.DEFAULT_ALL)
+            .setAutoCancel(true)
+            .build()
+
+        NotificationManagerCompat.from(context).notify(1, notification)
+    }
+    //`feat: bổ sung tạo kênh và hiển thị thông báo đơn hàng mới`
 }
