@@ -22,6 +22,27 @@ class GetCommentUseCase @Inject constructor(
     operator fun invoke() = flow {
         emit(UiState.Loading)
         //`feat: thêm GetCommentUseCase lấy bình luận và cập nhật cache phản hồi`
+        try {
+            when (val response = commentRepository.getComment()) {
+                is ResultWrapper.Success -> {
+                    clearCacheCommentUseCase.invoke().collect {
+                        val data = response.value
+                        cacheFeedbackUseCase.invoke(data.toListFeedBackEntity()).collect { }
+                    }
 
+                    emit(UiState.Success(response.value))
+                }
+
+                is ResultWrapper.GenericError -> emit(UiState.Error(response.message?.ifEmpty {
+                    context.getString(R.string.msg_wrong)
+                } ?: "Unknow Error"))
+
+                is ResultWrapper.NetworkError -> emit(UiState.Error("Network Error"))
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(UiState.Error(e.message ?: "Unknown Error"))
+        }
+        //`feat: bổ sung xử lý lấy bình luận và cập nhật cache phản hồi cho GetCommentUseCase`
     }
 }
