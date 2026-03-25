@@ -58,4 +58,16 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
             checkValidNetworks()
         }
     }
+    private fun doesNetworkHaveInternet(socketFactory: SocketFactory): Boolean {
+        return try {
+            val socket = socketFactory.createSocket() ?: throw IOException("Socket is null.")
+            socket.connect(InetSocketAddress("8.8.8.8", 53), 1500)
+            socket.close()
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
+
 }
