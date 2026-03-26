@@ -13,5 +13,19 @@ interface OrderRepository {
         reqCheckOutDTO: ReqCheckOutDTO
     ): ResultWrapper<ResCheckOutDTO>
     //`feat: thêm interface OrderRepository cho chức năng đặt hàng`
-    
+    suspend fun getOrdersByUser(
+        @Path("userId") userId: String
+    ): ResultWrapper<List<ResOrderDTO>>
+
+    suspend fun updateOrder(
+        orderId: String,
+        reqUpdateOrder: ReqUpdateOrder
+    ): ResultWrapper<ResUpdateOrder>
+
+    suspend fun cancelOrder(
+        orderId: String,
+        reqUpdateOrder: ReqCancelOrder
+    ): ResultWrapper<ResUpdateOrder>
+
+    suspend fun getAllOrder(): ResultWrapper<ResAllOrder>
 }
