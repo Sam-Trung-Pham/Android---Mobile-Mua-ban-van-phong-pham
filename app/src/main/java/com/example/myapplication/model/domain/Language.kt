@@ -37,5 +37,23 @@ data class Language(
             return lists
         }
         //`feat: thêm model Language và danh sách ngôn ngữ hỗ trợ`
+        fun getLanguage(): com.datn.bia.a.model.domain.Language? {
+            var languageModel: com.datn.bia.a.model.domain.Language? = null
+            val lang =
+                Resources.getSystem().configuration.locales[0].language
+            val key = if (!languageApp.contains(lang)) {
+                ""
+            } else {
+                lang
+            }
+            for (model in com.datn.bia.a.model.domain.Language.Companion.getListLanguageApp()) {
+                if (key == model.isoLanguage) {
+                    languageModel = model
+                    break
+                }
+            }
+            return languageModel
+        }
+        //`feat: bổ sung hàm getLanguage lấy ngôn ngữ hiện tại của hệ thống`
 
 }}
