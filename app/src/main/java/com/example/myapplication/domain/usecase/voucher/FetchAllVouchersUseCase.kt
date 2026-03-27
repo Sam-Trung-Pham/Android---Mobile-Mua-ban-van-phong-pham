@@ -18,6 +18,27 @@ class FetchAllVouchersUseCase @Inject constructor(
     operator fun invoke() = flow {
         emit(UiState.Loading)
     //`feat: thêm FetchAllVouchersUseCase xử lý lấy danh sách mã giảm giá`
+        try {
+            when (val response = voucherRepository.fetchAllVouchers()) {
+                is ResultWrapper.Success -> emit(UiState.Success(response.value))
 
+                is ResultWrapper.GenericError -> {
+                    Log.d("debug", "ResultWrapper.GenericError: ${response.message}")
+
+                    emit(UiState.Error(response.message?.ifEmpty {
+                        context.getString(R.string.msg_wrong)
+                    } ?: "Unknow Error"))
+                }
+
+                is ResultWrapper.NetworkError -> emit(UiState.Error("Network Error"))
+            }
+        } catch (e: HttpException) {
+            Log.d("debug", "HttpException: ${e.message}")
+            emit(UiState.Error(e.message ?: "Unknow Error"))
+        } catch (e: Exception) {
+            Log.d("debug", "Exception: ${e.message}")
+            emit(UiState.Error(e.message ?: "Unknow Error"))
+        }
+        //`feat: bổ sung xử lý lấy mã giảm giá và bắt lỗi cho FetchAllVouchersUseCase`
     }
 }
