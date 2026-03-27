@@ -55,5 +55,33 @@ data class Language(
             return languageModel
         }
         //`feat: bổ sung hàm getLanguage lấy ngôn ngữ hiện tại của hệ thống`
-
+        val languageApp: List<String>
+            get() {
+                val languages: MutableList<String> = ArrayList()
+                /*languages.add("ar"); // Arabic*/
+                languages.add("cs") // Czech
+                languages.add("de") // Germany
+                languages.add("en") // English
+                languages.add("es") // Spanish
+                languages.add("fil") // Filipino
+                languages.add("fr") // French
+                languages.add("hi") // Hindi
+                languages.add("hr") // Croatian
+                languages.add("in") // indonesian
+                languages.add("it") // italian
+                languages.add("ko") // korean
+                languages.add("ja") //japanese
+                languages.add("ms") // Malay
+                languages.add("nl") // Dutch
+                languages.add("pl") // Polish
+                languages.add("pt") // Portugal
+                languages.add("ru") // Russian
+                languages.add("sr") // Serbian
+                languages.add("sv") // Swedish
+                languages.add("tr") // Turkish
+                languages.add("vi") // Vietnamese
+                languages.add("zh") // Chinese
+                return languages
+            }
+        //`feat: bổ sung danh sách mã ngôn ngữ được hỗ trợ trong ứng dụng`
 }}
