@@ -54,6 +54,18 @@ class SignInViewModel @Inject constructor(
         loginUser(reqLogin)
     }
     //  `feat: bổ sung cập nhật email, mật khẩu và xử lý sự kiện đăng nhập trong SignInViewModel`
+    fun changeStateToIdle() {
+        _state.value = _state.value.copy(
+            uiState = UiState.Idle
+        )
+    }
 
+    private fun loginUser(req: ReqLoginUserDTO) = viewModelScope.launch {
+        loginUserUseCase.invoke(req).collect { uiState ->
+            _state.value = _state.value.copy(
+                uiState = uiState
+            )
+        }
+    }
 }
 ////`feat: bổ sung xử lý đặt lại trạng thái và gọi đăng nhập trong SignInViewModel`
