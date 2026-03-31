@@ -61,5 +61,33 @@ class ForgotPassActivity : BaseActivity<ActivityForgotpassBinding>() {
         }
     }
     //`feat: bổ sung observer xử lý trạng thái quên mật khẩu trong ForgotPassActivity`
+    override fun onClickViews() {
+        super.onClickViews()
 
+        binding.btnSend.click {
+            val email = binding.edtEmail.text.toString().trim()
+
+            if (email.isEmpty()) {
+                showToastOnce(getString(R.string.msg_input_null))
+                return@click
+            }
+
+            viewModel.forgotPass(
+                ReqForgotPass(
+                    email = email
+                )
+            )
+        }
+
+        binding.icBack.click {
+            finish()
+        }
+    }
+
+    override fun onDestroy() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+
+        super.onDestroy()
+        //`feat: bổ sung xử lý gửi email quên mật khẩu trong ForgotPassActivity`
 }}
