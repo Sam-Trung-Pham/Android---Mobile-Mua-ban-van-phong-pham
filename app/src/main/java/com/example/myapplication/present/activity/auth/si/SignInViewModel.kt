@@ -35,3 +35,25 @@ class SignInViewModel @Inject constructor(
         ), initialValue = SignInState()
     )
     //`feat: thêm SignInViewModel quản lý trạng thái và xử lý đăng nhập`
+    fun changeEmailValue(value: String) {
+        _emailInput.value = value
+    }
+
+    fun changePasswordValue(value: String) {
+        _passwordInput.value = value
+    }
+
+    fun onSignInEvent() {
+        val email = _emailInput.value
+        val password = _passwordInput.value
+
+        val reqLogin = ReqLoginUserDTO(
+            email = email,
+            password = password
+        )
+        loginUser(reqLogin)
+    }
+    //  `feat: bổ sung cập nhật email, mật khẩu và xử lý sự kiện đăng nhập trong SignInViewModel`
+
+}
+////`feat: bổ sung xử lý đặt lại trạng thái và gọi đăng nhập trong SignInViewModel`
