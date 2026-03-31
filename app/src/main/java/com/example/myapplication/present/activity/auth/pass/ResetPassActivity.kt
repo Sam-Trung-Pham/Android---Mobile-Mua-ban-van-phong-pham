@@ -28,5 +28,29 @@ class ResetPassActivity : BaseActivity<ActivityResetPassBinding>() {
         loadingDialog = LoadingDialog(this)
     }
     //`feat: thêm ResetPassActivity cho màn hình đặt lại mật khẩu`
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.uiState.collect { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        loadingDialog?.dismiss()
+                        showToastOnce(uiState.message)
+                    }
+                    UiState.Idle -> {}
+                    UiState.Loading -> {
+                        loadingDialog?.show()
+                    }
+                    is UiState.Success -> {
+                        loadingDialog?.dismiss()
+                        finish()
+                        showToastOnce(uiState.data.message?.ifEmpty { "Đổi mật khẩu thành công" } ?: "Đổi mật khẩu thành công")
+                    }
+                }
+            }
+        }
+    }
+    //`feat: bổ sung observer xử lý trạng thái đặt lại mật khẩu trong ResetPassActivity`
 
 }
