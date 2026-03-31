@@ -36,5 +36,34 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
         loadingDialog = LoadingDialog(this)
     }
     //`feat: thêm SignInActivity cho màn hình đăng nhập`
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.state.collect { signInState ->
+                when (val state = signInState.uiState) {
+                    is UiState.Error -> {
+                        loadingDialog?.dismiss()
+                        showToastOnce(state.message)
+                        viewModel.changeStateToIdle()
+                    }
+
+                    UiState.Idle -> loadingDialog?.dismiss()
+                    UiState.Loading -> loadingDialog?.show()
+                    is UiState.Success -> {
+                        loadingDialog?.dismiss()
+                        val json = Gson().toJson(state.data)
+                        SharedPrefCommon.jsonAcc = json ?: ""
+
+                        startActivity(Intent(thiscom.datn.bia.a.present.activity.auth.si.SignInActivity, MainActivity::class.java))
+                        finishAffinity()
+
+                        viewModel.changeStateToIdle()
+                    }
+                }
+            }
+        }
+    }
+    //`feat: bổ sung observer xử lý trạng thái đăng nhập trong SignInActivity`
 
 }
