@@ -65,5 +65,20 @@ class SignInActivity : BaseActivity<ActivitySignInBinding>() {
         }
     }
     //`feat: bổ sung observer xử lý trạng thái đăng nhập trong SignInActivity`
+    override fun onDestroy() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
 
+        super.onDestroy()
+    }
+
+    private fun onSignInEvent() {
+        if (viewModel.state.value.email.isEmpty() || viewModel.state.value.password.isEmpty()) {
+            showToastOnce(getString(R.string.msg_input_null))
+            return
+        }
+
+        viewModel.onSignInEvent()
+    }
+    //`feat: bổ sung xử lý sự kiện đăng nhập và giải phóng LoadingDialog trong SignInActivity`
 }
