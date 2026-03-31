@@ -30,5 +30,36 @@ class ForgotPassActivity : BaseActivity<ActivityForgotpassBinding>() {
         loadingDialog = LoadingDialog(this)
     }
     //`feat: thêm ForgotPassActivity cho màn hình quên mật khẩu`
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.uiState.collect { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        loadingDialog?.dismiss()
+                        showToastOnce(uiState.message.ifEmpty { getString(R.string.msg_email_not_exists) })
+                    }
+
+                    UiState.Idle -> {}
+                    UiState.Loading -> {
+                        loadingDialog?.show()
+                    }
+
+                    is UiState.Success -> {
+                        loadingDialog?.show()
+                        startActivity(
+                            Intent(
+                                thiscom.datn.bia.a.present.activity.auth.pass.ForgotPassActivity,
+                                ResetPassActivity::class.java
+                            )
+                        )
+                        finish()
+                    }
+                }
+            }
+        }
+    }
+    //`feat: bổ sung observer xử lý trạng thái quên mật khẩu trong ForgotPassActivity`
 
 }}
