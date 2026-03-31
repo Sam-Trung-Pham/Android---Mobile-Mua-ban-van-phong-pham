@@ -52,5 +52,42 @@ class ResetPassActivity : BaseActivity<ActivityResetPassBinding>() {
         }
     }
     //`feat: bổ sung observer xử lý trạng thái đặt lại mật khẩu trong ResetPassActivity`
+    override fun onClickViews() {
+        super.onClickViews()
 
+        binding.btnResetPassword.click {
+            val code = binding.edtCode.text.toString().trim()
+            val pass = binding.edtNewPassword.text.toString().trim()
+            val confirm = binding.edtConfirmNewPassword.text.toString().trim()
+
+            if (code.isEmpty() || pass.isEmpty() || confirm.isEmpty()) {
+                showToastOnce(getString(R.string.msg_input_null))
+                return@click
+            }
+
+            if (pass != confirm) {
+                showToastOnce(getString(R.string.msg_password_not_match))
+                return@click
+            }
+
+            if (pass.length < 8) {
+                showToastOnce(getString(R.string.msg_password_least_8_char))
+                return@click
+            }
+
+            viewModel.handleResetPass(
+                req = ReqResetPass(
+                    password = pass
+                ), token = code
+            )
+        }
+    }
+
+    override fun onDestroy() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+
+        super.onDestroy()
+    }
+    //`feat: bổ sung xử lý đặt lại mật khẩu trong ResetPassActivity`
 }
