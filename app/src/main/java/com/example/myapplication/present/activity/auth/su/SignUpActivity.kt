@@ -102,5 +102,29 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
                 ) = viewModel.changeConfirmPasswordValue(s?.toString() ?: "")
             })
 //            `feat: bổ sung lắng nghe thay đổi xác nhận mật khẩu trong SignUpActivity`
+            binding.edtUsername.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) = Unit
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) = Unit
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) = viewModel.changeUsernameValue(s?.toString() ?: "")
+            })
+
+            binding.btnSignUp.click {
+                onSignUpEvent()
+            }
+//            `feat: bổ sung lắng nghe thay đổi username và xử lý sự kiện đăng ký trong SignUpActivity`
+        }
+    }
 
 }
