@@ -81,5 +81,30 @@ class FavoriteProductsActivity : BaseActivity<ActivityFavoriteProductsBinding>()
                         binding.tvCountItemFavorite.goneView()
                     }
 //                    `feat: bổ sung observer xử lý trạng thái hiển thị danh sách sản phẩm yêu thích`
+                    is UiState.Success -> {
+                        binding.loadingView.goneView()
+                        binding.rcvFavorite.visibleView()
+                        binding.tvCountItemFavorite.visibleView()
 
+                        val listFavorite =
+                            viewModel.state.value.listFavorite.map { it.productId }.toSet()
+                        val data = response.data.data ?: emptyList()
+                        val listSubmit = data.filter { it.id in listFavorite }
+                        productAdapter?.submitData(listSubmit)
+                        binding.tvCountItemFavorite.text = "(${listSubmit.size})"
+
+                        viewModel.changeStateToIdle()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        productAdapter?.list?.clear()
+        productAdapter = null
+
+        super.onDestroy()
+    }
+//    `feat: bổ sung hiển thị danh sách và số lượng sản phẩm yêu thích`
 }
