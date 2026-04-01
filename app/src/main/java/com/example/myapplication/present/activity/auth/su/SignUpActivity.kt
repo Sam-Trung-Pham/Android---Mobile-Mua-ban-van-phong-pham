@@ -66,5 +66,23 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
                 ) = viewModel.changeEmailValue(s?.toString() ?: "")
             })
 //            `feat: bổ sung lắng nghe thay đổi email trong SignUpActivity`
+            binding.edtPassword.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) = Unit
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) = Unit
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) = viewModel.changePasswordValue(s?.toString() ?: "")
+            })
+//            `feat: bổ sung lắng nghe thay đổi mật khẩu trong SignUpActivity`
 
 }
