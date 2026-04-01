@@ -126,5 +126,40 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
 //            `feat: bổ sung lắng nghe thay đổi username và xử lý sự kiện đăng ký trong SignUpActivity`
         }
     }
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.state.collect { signUpState ->
+                when (val uiState = signUpState.uiState) {
+                    is UiState.Error -> {
+                        showToastOnce(uiState.message)
+                        loadingDialog?.cancel()
+                        viewModel.changeStateToIdle()
+                    }
+
+                    UiState.Idle -> {
+                        loadingDialog?.cancel()
+                    }
+
+                    UiState.Loading -> {
+                        loadingDialog?.show()
+                    }
+
+                    is UiState.Success -> {
+                        viewModel.changeStateToIdle()
+                        loadingDialog?.cancel()
+
+                        if (!isFromProfile) finish()
+                        else {
+                            startActivity(Intent(thiscom.datn.bia.a.present.activity.auth.su.SignUpActivity, SignInActivity::class.java))
+                            finishAffinity()
+                        }
+                    }
+                }
+            }
+        }
+    }
+//`feat: bổ sung observer xử lý trạng thái đăng ký trong SignUpActivity`
 
 }
