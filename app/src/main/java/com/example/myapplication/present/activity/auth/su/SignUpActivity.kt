@@ -84,5 +84,23 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
                 ) = viewModel.changePasswordValue(s?.toString() ?: "")
             })
 //            `feat: bổ sung lắng nghe thay đổi mật khẩu trong SignUpActivity`
+            binding.edtPasswordConfirmation.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) = Unit
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) = Unit
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) = viewModel.changeConfirmPasswordValue(s?.toString() ?: "")
+            })
+//            `feat: bổ sung lắng nghe thay đổi xác nhận mật khẩu trong SignUpActivity`
 
 }
