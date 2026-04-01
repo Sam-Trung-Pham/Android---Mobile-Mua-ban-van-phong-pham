@@ -58,5 +58,28 @@ class FavoriteProductsActivity : BaseActivity<ActivityFavoriteProductsBinding>()
         }
     }
     //`feat: thêm FavoriteProductsActivity hiển thị danh sách sản phẩm yêu thích`
+    @SuppressLint("SetTextI18n")
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                when (val response = state.uiState) {
+                    is UiState.Error -> {
+                        showToastOnce(response.message)
+
+                        binding.loadingView.goneView()
+                        binding.rcvFavorite.goneView()
+
+                        viewModel.changeStateToIdle()
+                    }
+
+                    UiState.Idle -> {}
+                    UiState.Loading -> {
+                        binding.loadingView.visibleView()
+                        binding.rcvFavorite.goneView()
+                        binding.tvCountItemFavorite.goneView()
+                    }
+//                    `feat: bổ sung observer xử lý trạng thái hiển thị danh sách sản phẩm yêu thích`
 
 }
