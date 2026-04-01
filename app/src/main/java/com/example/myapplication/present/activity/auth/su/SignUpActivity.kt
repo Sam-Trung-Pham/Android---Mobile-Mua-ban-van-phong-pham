@@ -161,5 +161,39 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>() {
         }
     }
 //`feat: bổ sung observer xử lý trạng thái đăng ký trong SignUpActivity`
+override fun onDestroy() {
+    loadingDialog?.dismiss()
+    loadingDialog = null
 
+    super.onDestroy()
+}
+
+    private fun onSignUpEvent() {
+        if (viewModel.state.value.email.isEmpty() ||
+            viewModel.state.value.password.isEmpty() ||
+            viewModel.state.value.confirmPassword.isEmpty() ||
+            viewModel.state.value.username.isEmpty()
+        ) {
+            showToastOnce(getString(R.string.msg_input_null))
+            return
+        }
+
+        if (!viewModel.state.value.email.isValidEmailAndroid()) {
+            showToastOnce(getString(R.string.msg_email_is_not_invalid))
+            return
+        }
+
+        if (viewModel.state.value.password.length < 8) {
+            showToastOnce(getString(R.string.msg_password_least_8_char))
+            return
+        }
+
+        if (viewModel.state.value.password != viewModel.state.value.confirmPassword) {
+            showToastOnce(getString(R.string.msg_password_not_match))
+            return
+        }
+
+        viewModel.onSignUpEvent()
+    }
+//    `feat: bổ sung kiểm tra dữ liệu và xử lý đăng ký trong SignUpActivity`
 }
