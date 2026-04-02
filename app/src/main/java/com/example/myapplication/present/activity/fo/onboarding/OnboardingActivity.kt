@@ -41,3 +41,29 @@ class OnboardingActivity: BaseActivity<ActivityOnboardingBinding>() {
         override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) = Unit
         override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) = Unit
 //        `feat: thêm OnboardingActivity cho màn hình giới thiệu ứng dụng`
+private val onboardingCallback = object : ViewPager2.OnPageChangeCallback() {
+    override fun onPageSelected(position: Int) {
+        super.onPageSelected(position)
+
+        onPageSelectedEvent(position)
+    }
+}
+
+        override fun getLayoutActivity(): Int = R.layout.activity_onboarding
+
+        override fun initViews() {
+            super.initViews()
+
+            binding.vgp2.apply {
+                onbAdapter = OnboardingAdapter(thiscom.datn.bia.a.present.activity.fo.onboarding.OnboardingActivity).apply {
+                    submitData(Onboarding.getAllOnboardings())
+                }
+                adapter = onbAdapter
+                clipToPadding = false
+                clipChildren = false
+                getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_ALWAYS
+                (getChildAt(0) as? RecyclerView)?.addOnItemTouchListener(lastPageSwipeListener)
+                registerOnPageChangeCallback(onboardingCallback)
+            }
+        }
+//        `feat: bổ sung khởi tạo ViewPager2 và xử lý chuyển trang onboarding`
