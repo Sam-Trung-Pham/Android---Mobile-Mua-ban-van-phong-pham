@@ -88,5 +88,19 @@ override fun onClickViews() {
     }
 }
 //    `feat: bổ sung xử lý chuyển tab trong MainActivity`
+override fun onDestroy() {
+    vpgAdapter = null
+    binding.vpgMain.unregisterOnPageChangeCallback(onPageChangeCallBack)
 
+    super.onDestroy()
+}
+
+    private fun initVpg() = binding.vpgMain.apply {
+        vpgAdapter = VpgAdapter(thiscom.datn.bia.a.present.activity.home.MainActivity)
+
+        adapter = vpgAdapter
+        registerOnPageChangeCallback(onPageChangeCallBack)
+        isUserInputEnabled = true
+    }
+//    `feat: bổ sung khởi tạo ViewPager và giải phóng tài nguyên trong MainActivity`
 }
