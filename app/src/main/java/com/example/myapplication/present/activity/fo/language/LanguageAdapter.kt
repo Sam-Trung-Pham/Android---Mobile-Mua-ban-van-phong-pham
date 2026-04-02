@@ -33,5 +33,17 @@ class LanguageAdapter(
         }
     }
 //    `feat: thêm LanguageAdapter hiển thị danh sách ngôn ngữ`
+override fun setData(
+    binding: ViewDataBinding,
+    item: Language,
+    layoutPosition: Int
+) {
+    if (binding is ItemLanguageBinding) {
+        Glide.with(context).load(item.image).into(binding.icCountriesFlag)
+        binding.tvLanguageName.text = item.languageName
+        binding.icRd.isActivated = layoutPosition == indexSelect
+    }
+}
+//    `feat: bổ sung bind dữ liệu và trạng thái chọn trong LanguageAdapter`
 
 }
