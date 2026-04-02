@@ -54,4 +54,23 @@ class MainActivity: BaseActivity<ActivityMainBinding>() {
             }
         }
     }
-//    `}
+//    `feat: thêm MainActivity và xử lý điều hướng tab trang chủ`
+override fun getLayoutActivity(): Int = R.layout.activity_main
+
+    override fun initViews() {
+        super.initViews()
+
+        if (SharedPrefCommon.isFirstInstall) SharedPrefCommon.isFirstInstall = false
+        initVpg()
+
+        Log.d("sampt", "${
+            Gson().fromJson(SharedPrefCommon.jsonAcc, ResLoginUserDTO::class.java)
+        }")
+
+        Log.d("sampt", "${
+            Gson().fromJson(SharedPrefCommon.jsonAcc, ResLoginUserDTO::class.java)?.user?.id
+        }")
+    }
+//    `feat: bổ sung khởi tạo MainActivity và xử lý trạng thái cài đặt lần đầu`
+
+}
