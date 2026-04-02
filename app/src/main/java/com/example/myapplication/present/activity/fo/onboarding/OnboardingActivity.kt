@@ -67,3 +67,29 @@ private val onboardingCallback = object : ViewPager2.OnPageChangeCallback() {
             }
         }
 //        `feat: bổ sung khởi tạo ViewPager2 và xử lý chuyển trang onboarding`
+override fun onClickViews() {
+    super.onClickViews()
+
+    binding.tvNext.click {
+        onNextEvent()
+    }
+}
+
+        private fun onPageSelectedEvent(position: Int) =
+            when (position) {
+                0 -> onPage1Selected()
+                1 -> onPage2Selected()
+                2 -> onPage3Selected()
+                else -> Unit
+            }
+
+        private fun onNextEvent() {
+            val isLastItem =
+                binding.vgp2.currentItem == onbAdapter.list.size - 1
+            if (isLastItem) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+            else binding.vgp2.currentItem++
+        }
+//        `feat: bổ sung xử lý chuyển trang và hoàn tất onboarding`
