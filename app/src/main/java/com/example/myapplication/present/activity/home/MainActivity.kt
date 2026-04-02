@@ -72,5 +72,21 @@ override fun getLayoutActivity(): Int = R.layout.activity_main
         }")
     }
 //    `feat: bổ sung khởi tạo MainActivity và xử lý trạng thái cài đặt lần đầu`
+override fun onClickViews() {
+    super.onClickViews()
+
+    binding.btnHome.click {
+        if (binding.vpgMain.currentItem != 0) binding.vpgMain.currentItem = 0
+    }
+
+    binding.btnCart.click {
+        if (binding.vpgMain.currentItem != 1) binding.vpgMain.currentItem = 1
+    }
+
+    binding.btnProfile.click {
+        if (binding.vpgMain.currentItem != 2) binding.vpgMain.currentItem = 2
+    }
+}
+//    `feat: bổ sung xử lý chuyển tab trong MainActivity`
 
 }
