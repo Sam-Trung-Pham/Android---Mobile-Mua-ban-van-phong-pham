@@ -53,5 +53,23 @@ class LanguageActivity : BaseActivity<ActivityLanguageBinding>() {
         }
     }
 //    `feat: thêm LanguageActivity cho chọn ngôn ngữ ứng dụng`
+private fun initRcvLanguage() = binding.rcvLanguage.apply {
+    languageAdapter = LanguageAdapter(thiscom.datn.bia.a.present.activity.fo.language.LanguageActivity) { index, language ->
+        languageAdapter?.indexSelect = index
+    }.apply {
+        submitData(Language.getListLanguageApp())
+    }
 
+    adapter = languageAdapter
+}
+
+    override fun onDestroy() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+        languageAdapter?.list?.clear()
+        languageAdapter = null
+
+        super.onDestroy()
+    }
+//    `feat: bổ sung khởi tạo danh sách ngôn ngữ và giải phóng tài nguyên trong LanguageActivity`
 }
