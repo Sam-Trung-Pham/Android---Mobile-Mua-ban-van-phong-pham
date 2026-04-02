@@ -45,5 +45,17 @@ override fun setData(
     }
 }
 //    `feat: bổ sung bind dữ liệu và trạng thái chọn trong LanguageAdapter`
+override fun onClickViews(binding: ViewDataBinding, obj: Language, layoutPosition: Int) {
+    super.onClickViews(binding, obj, layoutPosition)
 
+    if (binding is ItemLanguageBinding) {
+        binding.root.click {
+            onLanguageClicked.invoke(layoutPosition, obj)
+        }
+    }
+}
+
+    fun getIsoLanguageCurrent() =
+        list[indexSelect].isoLanguage
+//    `feat: bổ sung xử lý chọn ngôn ngữ và lấy mã ngôn ngữ hiện tại trong LanguageAdapter`
 }
