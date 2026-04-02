@@ -93,3 +93,31 @@ override fun onClickViews() {
             else binding.vgp2.currentItem++
         }
 //        `feat: bổ sung xử lý chuyển trang và hoàn tất onboarding`
+override fun onDestroy() {
+    binding.vgp2.unregisterOnPageChangeCallback(onboardingCallback)
+    (binding.vgp2.getChildAt(0) as? RecyclerView)?.removeOnItemTouchListener(
+        lastPageSwipeListener
+    )
+
+    super.onDestroy()
+}
+
+        private fun onPage1Selected() {
+            binding.icDot1.isActivated = true
+            binding.icDot2.isActivated = false
+            binding.icDot3.isActivated = false
+        }
+
+        private fun onPage2Selected() {
+            binding.icDot1.isActivated = false
+            binding.icDot2.isActivated = true
+            binding.icDot3.isActivated = false
+        }
+
+        private fun onPage3Selected() {
+            binding.icDot1.isActivated = false
+            binding.icDot2.isActivated = false
+            binding.icDot3.isActivated = true
+        }
+//        `feat: bổ sung xử lý huỷ callback và cập nhật trạng thái chấm chỉ trang trong OnboardingActivity`
+    }
