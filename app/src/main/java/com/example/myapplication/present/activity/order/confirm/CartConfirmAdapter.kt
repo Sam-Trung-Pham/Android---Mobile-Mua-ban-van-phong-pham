@@ -29,5 +29,32 @@ class CartConfirmAdapter(
         }
     }
 //    `feat: thêm CartConfirmAdapter hiển thị sản phẩm trong màn xác nhận đơn hàng`
+@SuppressLint("SetTextI18n")
+override fun setData(
+    binding: ViewDataBinding,
+    item: Cart,
+    layoutPosition: Int
+) {
+    if (binding is ItemProdOrderBinding) {
+        Glide.with(contextParams).load(item.productImage).into(binding.imgProduct)
+        binding.tvProductName.text = item.productName
+        binding.tvCountProduct.text = "x${item.productQuantity}"
+        if (item.productDiscount > 0) {
+            binding.tvBeforeDiscount.apply {
+                text = item.productPrice.formatVND()
+                visibleView()
+            }
+            binding.viewLine.visibleView()
+            binding.tvPriceFinal.text =
+                (item.productPrice - (item.productPrice * item.productDiscount / 100)).formatVND()
+        } else {
+            binding.tvBeforeDiscount.goneView()
+            binding.viewLine.goneView()
+            binding.tvPriceFinal.text = item.productPrice.formatVND()
+        }
 
+        binding.tvColor.text = contextParams.getString(R.string.color_, item.variant.color ?: "")
+    }
+}
+//    `feat: bổ sung bind dữ liệu sản phẩm trong CartConfirmAdapter`
 }
