@@ -85,5 +85,58 @@ class ConfirmOrderActivity : BaseActivity<ActivityConfirmOrderBinding>() {
         setData()
     }
 //        `feat: thêm ConfirmOrderActivity xử lý xác nhận đơn hàng và thanh toán`
+override fun onClickViews() {
+    super.onClickViews()
+
+    binding.btnPay.click {
+        paymentOrder()
+    }
+
+    binding.icBack.click {
+        finish()
+    }
+
+    binding.btnShowMessage.click {
+        messageDialog?.show()
+    }
+}
+
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.message.collect { message ->
+                binding.tvMessage.text = message
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.stateCheckOut.collect { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        Log.d("duylt", "Message: ${uiState.message}")
+                        showToastOnce(getString(R.string.msg_ins_stock))
+                        loadingDialog?.cancel()
+                        viewModel.changeStateToIdle()
+                    }
+
+                    UiState.Idle -> {
+
+                    }
+
+                    UiState.Loading -> {
+                        loadingDialog?.show()
+                    }
+
+                    is UiState.Success<*> -> {
+                        loadingDialog?.cancel()
+
+                        notificationDialog?.show()
+                    }
+                }
+            }
+        }
+    }
+    //`feat: bổ sung xử lý sự kiện và quan sát trạng thái thanh toán trong ConfirmOrderActivity`
 
 }
