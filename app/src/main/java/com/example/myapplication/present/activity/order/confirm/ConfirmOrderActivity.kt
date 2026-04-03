@@ -267,5 +267,18 @@ override fun onClickViews() {
         }
     }
     //`feat: bổ sung xử lý thanh toán COD và ZaloPay trong ConfirmOrderActivity`
+    @SuppressLint("SetTextI18n")
+    private fun setData() {
+        gson?.fromJson(SharedPrefCommon.jsonAcc, ResLoginUserDTO::class.java)
+            ?.let { (user, token, message) ->
+                binding.tvUserName.text = user?.username
+                binding.tvPhoneNumber.text = "(${user?.phone ?: getString(R.string.unknown)})"
+                binding.tvAddress.text = user?.address ?: getString(R.string.unknown)
 
+                binding.tvPaymentMethod.text = paymentMethod
+            }
+
+        binding.tvTotal.text = (intent.getDoubleExtra(AppConst.KEY_TOTAL_PRICE, 0.0) + AppConst.FEE_SHIP).formatVND()
+    }
+    //`feat: bổ sung hiển thị thông tin người nhận, phương thức thanh toán và tổng tiền trong ConfirmOrderActivity`
 }
