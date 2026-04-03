@@ -88,5 +88,13 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>() {
         }
     }
     //`feat: bổ sung xử lý sự kiện và quan sát trạng thái đơn hàng trong OrderActivity`
+    override fun onDestroy() {
+        binding.vpgTab.unregisterOnPageChangeCallback(onPageChangeCbListener)
+        orderAdapter = null
+        orderStateAdapter?.list?.clear()
+        orderStateAdapter = null
 
+        super.onDestroy()
+    }
+    //`feat: bổ sung giải phóng adapter và huỷ callback trong OrderActivity`
 }
