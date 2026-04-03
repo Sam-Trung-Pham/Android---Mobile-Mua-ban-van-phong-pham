@@ -162,5 +162,110 @@ override fun onClickViews() {
         ZaloPaySDK.init(553, Environment.SANDBOX)
     }
     //`feat: bổ sung xử lý vòng đời và tích hợp kết quả thanh toán ZaloPay trong ConfirmOrderActivity`
+    private fun paymentOrder() {
+        if (paymentMethod == MethodPayment.CASH_ON_DELIVERY.name) {
+            viewModel.checkOutOrder(
+                totalPrice = intent.getDoubleExtra(AppConst.KEY_TOTAL_PRICE, 0.0),
+                voucherId = intent.getStringExtra(AppConst.KEY_ID_VOUCHER),
+                listProduct = gson?.fromJson<List<ReqProdCheckOut>>(
+                    intent.getStringExtra(AppConst.KEY_LIST_PRODUCT),
+                    object : TypeToken<List<ReqProdCheckOut>>() {}.type
+                ) ?: emptyList(),
+                paymentMethod = "COD"
+            )
+            return
+        }
+
+        val orderApi = CreateOrder()
+
+        try {
+            val data = orderApi.createOrder(
+                (intent.getDoubleExtra(
+                    AppConst.KEY_TOTAL_PRICE,
+                    0.0
+                ) + AppConst.FEE_SHIP).toString()
+            )
+            val code = data.getString("returncode")
+
+            if (code == "1") {
+                val token = data.getString("zptranstoken")
+                Log.d("duylt", "Token: $token")
+                ZaloPaySDK.getInstance().payOrder(
+                    this, token, "demozpdk://app", object : PayOrderListener {
+                        override fun onPaymentSucceeded(
+                            p0: String?,
+                            p1: String?,
+                            p2: String?
+                        ) {
+                            viewModel.checkOutOrder(
+                                totalPrice = intent.getDoubleExtra(AppConst.KEY_TOTAL_PRICE, 0.0),
+                                voucherId = intent.getStringExtra(AppConst.KEY_ID_VOUCHER),
+                                listProduct = gson?.fromJson<List<ReqProdCheckOut>>(
+                                    intent.getStringExtra(AppConst.KEY_LIST_PRODUCT),
+                                    object : TypeToken<List<ReqProdCheckOut>>() {}.type
+                                ) ?: emptyList(),
+                                paymentMethod = "ZALO PAY"
+                            )
+                        }
+
+                        override fun onPaymentCanceled(p0: String?, p1: String?) {
+                            AlertDialog.Builder(thiscom.datn.bia.a.present.activity.order.confirm.ConfirmOrderActivity)
+                                .setTitle("User Cancel Payment")
+                                .setMessage(String.format("zpTransToken: %s \n", p0))
+                                .setPositiveButton("OK") { dialog, which -> }
+                                .setNegativeButton("Cancel", null).show()
+                        }
+
+                        override fun onPaymentError(
+                            p0: ZaloPayError?,
+                            p1: String?,
+                            p2: String?
+                        ) {
+                            if (p0 == ZaloPayError.PAYMENT_APP_NOT_FOUND) {
+                                val handler = Handler(Looper.getMainLooper())
+                                handler.postDelayed({
+                                    AlertDialog.Builder(thiscom.datn.bia.a.present.activity.order.confirm.ConfirmOrderActivity)
+                                        .setTitle("Error Payment")
+                                        .setMessage("ZaloPay App not install on this Device.")
+                                        .setPositiveButton(
+                                            "Open Market"
+                                        ) { dialog, which ->
+                                            ZaloPaySDK.getInstance()
+                                                .navigateToZaloPayOnStore(thiscom.datn.bia.a.present.activity.order.confirm.ConfirmOrderActivity)
+                                        }
+                                        .setNegativeButton("Back", null).show()
+                                }, 500)
+                                Log.d(
+                                    "CODE_NOT_INSTALL",
+                                    "onError: <br> <b> <i> ZaloPay App not install on this Device. </i> </b>"
+                                )
+                            } else {
+                                Log.d(
+                                    "CODE_PAY_ERROR",
+                                    "onError: On onPaymentError with paymentErrorCode: " + p0?.toString() + " - zpTransToken: " + p1
+                                )
+                                AlertDialog.Builder(thiscom.datn.bia.a.present.activity.order.confirm.ConfirmOrderActivity)
+                                    .setTitle("Payment Fail")
+                                    .setMessage(
+                                        String.format(
+                                            "ZaloPayErrorCode: %s \nTransToken: %s",
+                                            p0.toString(),
+                                            p1
+                                        )
+                                    )
+                                    .setPositiveButton(
+                                        "OK"
+                                    ) { dialog, which -> }
+                                    .setNegativeButton("Cancel", null).show()
+                            }
+                        }
+                    }
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    //`feat: bổ sung xử lý thanh toán COD và ZaloPay trong ConfirmOrderActivity`
 
 }
