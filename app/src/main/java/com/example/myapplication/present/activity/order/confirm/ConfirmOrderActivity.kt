@@ -138,5 +138,29 @@ override fun onClickViews() {
         }
     }
     //`feat: bổ sung xử lý sự kiện và quan sát trạng thái thanh toán trong ConfirmOrderActivity`
+    override fun onDestroy() {
+        gson = null
+        cartConfirmAdapter?.list?.clear()
+        cartConfirmAdapter = null
+        messageDialog?.dismiss()
+        messageDialog = null
+        loadingDialog?.dismiss()
+        loadingDialog = null
+
+        super.onDestroy()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        ZaloPaySDK.getInstance().onResult(intent)
+    }
+
+    private fun initZaloPay() {
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(553, Environment.SANDBOX)
+    }
+    //`feat: bổ sung xử lý vòng đời và tích hợp kết quả thanh toán ZaloPay trong ConfirmOrderActivity`
 
 }
