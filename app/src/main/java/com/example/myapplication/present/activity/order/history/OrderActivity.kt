@@ -58,5 +58,35 @@ class OrderActivity : BaseActivity<ActivityOrderBinding>() {
             intent.getIntExtra(AppConst.KEY_ORDER_TYPE, 0)
     }
     //`feat: thêm OrderActivity hiển thị lịch sử đơn hàng theo trạng thái`
+    override fun onClickViews() {
+        super.onClickViews()
+
+        binding.icBack.click { finish() }
+    }
+
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.state.collect { orderState ->
+                when (val response = orderState.uiState) {
+                    is UiState.Error -> {
+                        showToastOnce(response.message)
+
+                        viewModel.changeStateToIdle()
+                    }
+
+                    UiState.Idle -> Unit
+
+                    UiState.Loading -> Unit
+
+                    is UiState.Success -> {
+                        viewModel.changeStateToIdle()
+                    }
+                }
+            }
+        }
+    }
+    //`feat: bổ sung xử lý sự kiện và quan sát trạng thái đơn hàng trong OrderActivity`
 
 }
