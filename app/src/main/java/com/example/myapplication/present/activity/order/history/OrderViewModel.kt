@@ -108,5 +108,42 @@ class OrderViewModel @Inject constructor(
         _uiStateUpdate.value = UiState.Idle
     }
     //`feat: bổ sung xử lý cập nhật, hủy đơn hàng và reset trạng thái trong OrderViewModel`
+    fun postComment(
+        orderId: String,
+        productIds: List<String>,
+        stars: Int,
+        comment: String
+    ) = launchIO {
+        createCommentUseCase.invoke(
+            ReqCommentDTO(
+                userId = idUserCurrent,
+                productId = productIds,
+                content = comment,
+                rating = stars
+            )
+        ).collect { uiState ->
+            _stateComment.value = uiState
+            when (uiState) {
+                is UiState.Error -> {}
+                UiState.Idle -> {}
+                UiState.Loading -> {}
+                is UiState.Success<*> -> {
+                    cacheCommentUseCase.invoke(
+                        CommentEntity(
+                            id = 0L,
+                            orderId = orderId,
+                            userId = idUserCurrent
+                        )
+                    ).collect {
 
+                    }
+                }
+            }
+        }
+    }
+
+    fun resetStateComment() {
+        _stateComment.value = UiState.Idle
+    }
+    //`feat: bổ sung xử lý gửi bình luận và lưu cache đánh giá trong OrderViewModel`
 }
