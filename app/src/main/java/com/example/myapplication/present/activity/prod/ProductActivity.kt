@@ -180,5 +180,29 @@ class ProductActivity : BaseActivity<ActivityProductBinding>() {
         variant = prod.variants?.firstOrNull()
     }
     //`feat: bổ sung hiển thị chi tiết sản phẩm, biến thể và giá bán trong ProductActivity`
+    private fun onAddCartEvent() {
+        if (SharedPrefCommon.jsonAcc.isEmpty()) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            return
+        }
+
+        if (!isNetwork()) {
+            showToastOnce(getString(R.string.msg_error_network))
+            return
+        }
+
+        idProdCur?.let { id ->
+            viewModel.addProductToCart(
+                productId = id,
+                variant!!,
+                price
+            )
+            showToastOnce(getString(R.string.msg_added_to_cart))
+        } ?: run {
+            showToastOnce(getString(R.string.msg_wrong))
+        }
+    }
+    //`feat: bổ sung xử lý thêm sản phẩm vào giỏ hàng trong ProductActivity`
+
 
 }
