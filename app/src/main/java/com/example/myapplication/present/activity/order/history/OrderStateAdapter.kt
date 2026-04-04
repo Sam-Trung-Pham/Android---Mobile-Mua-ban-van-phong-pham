@@ -37,5 +37,28 @@ class OrderStateAdapter(
     }
     //``
 
+    override fun setData(
+        binding: ViewDataBinding,
+        item: OrderState,
+        layoutPosition: Int
+    ) {
+        if (binding is ItemStatusBinding) {
+            binding.tvStatusName.apply {
+                text = contextParams.getString(item.statusNameRes)
+                setTextColorById(if (layoutPosition == indexSelect) R.color.primary else R.color._232323)
+            }
+            if (layoutPosition == indexSelect) binding.indicator.visibleView() else binding.indicator.invisibleView()
+        }
+    }
 
+    override fun onClickViews(binding: ViewDataBinding, obj: OrderState, layoutPosition: Int) {
+        super.onClickViews(binding, obj, layoutPosition)
+
+        if (binding is ItemStatusBinding) {
+            binding.root.click {
+                onStatusClick.invoke(layoutPosition, obj)
+            }
+        }
+    }
+    //`feat: bổ sung hiển thị và xử lý chọn trạng thái đơn hàng trong OrderStateAdapter`
 }
