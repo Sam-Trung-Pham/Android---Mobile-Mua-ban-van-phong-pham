@@ -111,6 +111,74 @@ class ProductActivity : BaseActivity<ActivityProductBinding>() {
             finish()
         }
     }
-    //`
+    //`feat: bổ sung nhận dữ liệu sản phẩm và kiểm tra trạng thái yêu thích trong ProductActivity`
+    @SuppressLint("SetTextI18n")
+    private fun onShowData(prod: ResProductDataDTO) = binding.apply {
+        imageAdapter = ImageAdapter(
+            contextParams = this@ProductActivity,
+            onItemClicked = { linkUrl, index ->
+                Glide.with(this@ProductActivity).load(linkUrl).into(binding.imgProduct)
+                imageAdapter?.indexSelect = index
+            }
+        ).apply { submitData(prod.albumImage ?: emptyList()) }
+
+        variantAdapter = VariantAdapter { index, item ->
+            variantAdapter?.indexSelect = index
+
+            variant = item
+
+            price = item.price ?: 0.0
+
+            if (prod.discount == null || prod.discount == 0) {
+                binding.tvPrice.text = item.price?.formatVND() ?: "NaN"
+                binding.tvDiscount.goneView()
+                binding.tvPrice1.goneView()
+                binding.line.goneView()
+            } else {
+                binding.tvPrice.text =
+                    ((item.price
+                        ?: 0.0) - (prod.discount * (item.price
+                        ?: 0.0) / 100)).formatVND()
+                binding.tvDiscount.apply {
+                    visibleView()
+                    text = "-${prod.discount}%"
+                }
+                binding.tvPrice1.text = item.price?.formatVND() ?: "NaN"
+                binding.line.visibleView()
+            }
+        }.apply {
+            submitData(prod.variants ?: emptyList())
+        }
+
+        rcvImage.adapter = imageAdapter
+        binding.rcvVariant.adapter = variantAdapter
+        Glide.with(this@ProductActivity).load(prod.imageUrl).into(binding.imgProduct)
+        tvProductName.text = prod.name ?: ""
+        tvDes.text = prod.des ?: ""
+
+        if (prod.discount == null || prod.discount == 0) {
+            price = prod.variants?.firstOrNull()?.price ?: 0.0
+            binding.tvPrice.text = prod.variants?.firstOrNull()?.price?.formatVND() ?: "NaN"
+            binding.tvDiscount.goneView()
+            binding.tvPrice1.goneView()
+            binding.line.goneView()
+        } else {
+            val priceTotal = ((prod.variants?.firstOrNull()?.price
+                ?: 0.0) - (prod.discount * (prod.variants?.firstOrNull()?.price
+                ?: 0.0) / 100))
+            price = priceTotal
+            binding.tvPrice.text = priceTotal.formatVND()
+            binding.tvDiscount.apply {
+                visibleView()
+                text = "-${prod.discount}%"
+            }
+            binding.tvPrice1.text = prod.variants?.firstOrNull()?.price?.formatVND() ?: "NaN"
+            binding.line.visibleView()
+        }
+
+        idProdCur = prod.id
+        variant = prod.variants?.firstOrNull()
+    }
+    //`feat: bổ sung hiển thị chi tiết sản phẩm, biến thể và giá bán trong ProductActivity`
 
 }
