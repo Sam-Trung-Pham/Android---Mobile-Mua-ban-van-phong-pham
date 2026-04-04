@@ -97,5 +97,20 @@ class ProductActivity : BaseActivity<ActivityProductBinding>() {
     }
     //`feat: bổ sung xử lý sự kiện và giải phóng tài nguyên trong ProductActivity`
 
+    private fun receiveData() {
+        intent.getStringExtra(AppConst.KEY_PRODUCT_DETAIL)?.let { json ->
+            gson?.fromJson(json, ResProductDataDTO::class.java)?.let { product ->
+                onShowData(product)
+                viewModel.searchProductInFavorite(product.id ?: "")
+            } ?: run {
+                showToastOnce(getString(R.string.msg_wrong))
+                finish()
+            }
+        } ?: run {
+            showToastOnce(getString(R.string.msg_wrong))
+            finish()
+        }
+    }
+    //`
 
 }
