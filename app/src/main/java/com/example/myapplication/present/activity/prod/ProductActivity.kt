@@ -204,5 +204,21 @@ class ProductActivity : BaseActivity<ActivityProductBinding>() {
     }
     //`feat: bổ sung xử lý thêm sản phẩm vào giỏ hàng trong ProductActivity`
 
+    private fun onEventBuyNow() {
+        if (SharedPrefCommon.jsonAcc.isEmpty()) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            return
+        }
+    }
 
+    private fun onFavoriteEvent() {
+        if (SharedPrefCommon.jsonAcc.isEmpty()) {
+            startActivity(Intent(this, SignInActivity::class.java))
+            return
+        }
+
+        if (binding.icFavorite.isActivated) viewModel.removeFavoriteByIdProduct(idProdCur ?: "")
+        else viewModel.addFavoriteByIdProduct(idProdCur ?: "")
+    }
+    //`feat: bổ sung xử lý mua ngay và thêm/xóa sản phẩm yêu thích trong ProductActivity`
 }
