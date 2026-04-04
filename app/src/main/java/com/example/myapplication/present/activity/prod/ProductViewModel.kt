@@ -38,5 +38,37 @@ class ProductViewModel @Inject constructor(
         }
     }
     //`feat: thêm ProductViewModel quản lý giỏ hàng, yêu thích và dữ liệu đánh giá sản phẩm`
+    fun addProductToCart(
+        productId: String,
+        variant: ResVariantDTO,
+        price: Double,
+    ) = viewModelScope.launch {
+        insertCartUseCase.invoke(
+            productId,
+            variant,
+            price
+        ).collect {
 
+        }
+    }
+
+    fun searchProductInFavorite(id: String) = viewModelScope.launch {
+        _favoriteEntity.emit(getFavoriteUseCase.invoke(id).first())
+    }
+
+    fun removeFavoriteByIdProduct(id: String) = viewModelScope.launch {
+        deleteFavoriteUseCase.invoke(id)
+        _favoriteEntity.emit(null)
+    }
+
+    fun addFavoriteByIdProduct(id: String) = viewModelScope.launch {
+        insertFavoriteUseCase.invoke(FavoriteEntity(productId = id))
+        _favoriteEntity.emit(
+            FavoriteEntity(
+                id = 0,
+                productId = id
+            )
+        )
+    }
+    //`feat: bổ sung xử lý thêm giỏ hàng và quản lý yêu thích trong ProductViewModel`
 }
