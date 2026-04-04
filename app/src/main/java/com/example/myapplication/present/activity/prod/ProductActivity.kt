@@ -68,5 +68,34 @@ class ProductActivity : BaseActivity<ActivityProductBinding>() {
     }
     ////`feat: thêm ProductActivity hiển thị chi tiết sản phẩm và xử lý trạng thái yêu thích, đánh giá`
 
+    override fun onClickViews() {
+        super.onClickViews()
+
+        binding.icBack.click { finish() }
+
+        binding.btnAddCart.click { onAddCartEvent() }
+
+        binding.btnBuyNow.click { onEventBuyNow() }
+
+        binding.icFavorite.click { onFavoriteEvent() }
+
+        binding.btnSeeAllComment.click {
+            startActivity(Intent(this, ReviewsActivity::class.java).apply {
+                putExtra(AppConst.KEY_ID_PRODUCT, idProdCur)
+            })
+        }
+    }
+
+    override fun onDestroy() {
+        gson = null
+        imageAdapter?.list?.clear()
+        imageAdapter = null
+        variantAdapter?.list?.clear()
+        variantAdapter = null
+
+        super.onDestroy()
+    }
+    //`feat: bổ sung xử lý sự kiện và giải phóng tài nguyên trong ProductActivity`
+
 
 }
