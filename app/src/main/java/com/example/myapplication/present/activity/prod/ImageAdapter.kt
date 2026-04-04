@@ -33,5 +33,26 @@ class ImageAdapter(
         notifyDataSetChanged()
     }
     //`feat: thêm ImageAdapter hiển thị danh sách ảnh sản phẩm`
+    override fun setData(
+        binding: ViewDataBinding,
+        item: String,
+        layoutPosition: Int
+    ) {
+        if (binding is ItemImageProductBinding) {
+            Glide.with(contextParams).load(item).into(binding.imgProduct)
 
+            binding.container.isActivated = layoutPosition == indexSelect
+        }
+    }
+
+    override fun onClickViews(binding: ViewDataBinding, obj: String, layoutPosition: Int) {
+        super.onClickViews(binding, obj, layoutPosition)
+
+        if (binding is ItemImageProductBinding) {
+            binding.root.click {
+                onItemClicked.invoke(obj, layoutPosition)
+            }
+        }
+    }
+    //`feat: bổ sung hiển thị và xử lý chọn ảnh sản phẩm trong ImageAdapter`
 }
