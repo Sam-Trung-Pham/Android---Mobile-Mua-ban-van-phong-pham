@@ -211,5 +211,19 @@ class TabOrderFragment : BaseFragment<FragmentTabOrderBinding>() {
         }
         //`feat: bổ sung xử lý trạng thái đánh giá đơn hàng trong TabOrderFragment`
     }
+    override fun onDestroyView() {
+        loadingDialog?.cancel()
+        loadingDialog = null
+        commentDialog?.cancel()
+        commentDialog = null
+        confirmCancelOrderDialog?.cancel()
+        confirmCancelOrderDialog = null
+        reasonCancelDialog?.cancel()
+        reasonCancelDialog = null
+        confirmCompleteDialog?.dismiss()
+        confirmCompleteDialog = null
 
+        super.onDestroyView()
+    }
+    //`feat: bổ sung giải phóng dialog và tài nguyên trong TabOrderFragment`
 }
