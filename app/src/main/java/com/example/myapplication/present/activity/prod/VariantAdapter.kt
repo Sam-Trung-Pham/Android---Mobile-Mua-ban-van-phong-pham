@@ -32,5 +32,26 @@ class VariantAdapter(
         }
     }
     //`feat: thêm VariantAdapter hiển thị và chọn biến thể sản phẩm`
+    override fun setData(
+        binding: ViewDataBinding,
+        item: ResVariantDTO,
+        layoutPosition: Int
+    ) {
+        if (binding is ItemVariantBinding) {
+            binding.tvVariant.text = item.color ?: ""
+            binding.tvVariant.isActivated = layoutPosition == indexSelect
+            binding.tvVariant.setTextColorById(if (layoutPosition == indexSelect) R.color.white else R.color._959595)
+        }
+    }
 
+    override fun onClickViews(binding: ViewDataBinding, obj: ResVariantDTO, layoutPosition: Int) {
+        super.onClickViews(binding, obj, layoutPosition)
+
+        if (binding is ItemVariantBinding) {
+            binding.root.click {
+                onClick.invoke(layoutPosition, obj)
+            }
+        }
+    }
+    //`feat: bổ sung hiển thị và xử lý chọn biến thể trong VariantAdapter`
 }
