@@ -65,5 +65,42 @@ class VouchersActivity : BaseActivity<ActivityVouchersBinding>() {
         }
     }
     //`feat: bổ sung xử lý áp dụng mã giảm giá trong VouchersActivity`
+    override fun observerData() {
+        super.observerData()
 
+        lifecycleScope.launch {
+            viewModel.state.collect { uiState ->
+                when (val response = uiState.uiState) {
+                    is UiState.Error -> {
+                        showToastOnce(response.message)
+                        viewModel.changeStateToIdle()
+
+                        binding.loadingView.goneView()
+                        binding.rcvVoucher.goneView()
+                    }
+
+                    UiState.Idle -> {
+
+                    }
+
+                    UiState.Loading -> {
+                        binding.loadingView.visibleView()
+                        binding.rcvVoucher.goneView()
+                    }
+
+                    is UiState.Success -> {
+                        binding.loadingView.goneView()
+                        binding.rcvVoucher.visibleView()
+
+                        val listVouchers = response.data
+                        voucherAdapter?.submitData(listVouchers.filter { it.endDate?.getRemainingTime()?.lowercase() != "Đã hết hạn".lowercase() })
+
+                        viewModel.changeStateToIdle()
+                    }
+                }
+            }
+        }
+    }
+    //`feat: bổ sung observer xử lý hiển thị danh sách mã giảm giá trong VouchersActivity`
+    
 }
