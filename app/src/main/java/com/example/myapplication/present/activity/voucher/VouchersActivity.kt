@@ -102,5 +102,11 @@ class VouchersActivity : BaseActivity<ActivityVouchersBinding>() {
         }
     }
     //`feat: bổ sung observer xử lý hiển thị danh sách mã giảm giá trong VouchersActivity`
-    
+    override fun onDestroy() {
+        voucherAdapter?.list?.clear()
+        voucherAdapter = null
+
+        super.onDestroy()
+    }
+    //`feat: bổ sung giải phóng adapter trong VouchersActivity`
 }
