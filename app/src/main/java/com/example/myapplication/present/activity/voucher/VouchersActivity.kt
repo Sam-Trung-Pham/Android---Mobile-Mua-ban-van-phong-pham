@@ -46,5 +46,24 @@ class VouchersActivity : BaseActivity<ActivityVouchersBinding>() {
         binding.tvMsgVoucherApplied.goneView()
     }
     //`feat: thêm VouchersActivity hiển thị danh sách mã giảm giá`
+    override fun onClickViews() {
+        super.onClickViews()
+
+        binding.icBack.click {
+            finish()
+        }
+
+        binding.btnApplyVoucher.click {
+            voucherAdapter?.getVoucherSelect()?.let { voucher ->
+                setResult(RESULT_OK, Intent().apply {
+                    putExtra(AppConst.KEY_VOUCHER, Gson().toJson(voucher))
+                })
+                finish()
+            } ?: run {
+
+            }
+        }
+    }
+    //`feat: bổ sung xử lý áp dụng mã giảm giá trong VouchersActivity`
 
 }
