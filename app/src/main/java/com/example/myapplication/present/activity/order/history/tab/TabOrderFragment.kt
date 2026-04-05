@@ -94,5 +94,32 @@ class TabOrderFragment : BaseFragment<FragmentTabOrderBinding>() {
             }
         )
         //`feat: bổ sung khởi tạo dialog xác nhận hủy và hoàn tất đơn hàng trong TabOrderFragment`
+        binding.rcvOrder.apply {
+            orderAdapter = OrderAdapter(
+                contextParams = requireContext(),
+                status = when (index) {
+                    0 -> AppConst.STATUS_ORDER_TO_PAY
+                    1 -> AppConst.STATUS_ORDER_TO_RECEIVE
+                    2 -> AppConst.STATUS_ORDER_TO_COMPLETED
+                    else -> AppConst.STATUS_ORDER_TO_CANCELLED
+                },
+                onClickItem = { index, res ->
+
+                }, onCancel = { index, res ->
+                    resOrder = res
+                    confirmCancelOrderDialog?.show()
+                }, onReview = { index, res ->
+                    resOrder = res
+                    commentDialog?.showDialog(res._id ?: "")
+                }, onConfirm = { index, res ->
+                    cacheId = res._id ?: ""
+                    confirmCompleteDialog?.show()
+                }
+            )
+
+            adapter = orderAdapter
+        }
+    }
+    //`feat: bổ sung khởi tạo OrderAdapter và xử lý thao tác đơn hàng trong TabOrderFragment`
 
 }
