@@ -179,5 +179,37 @@ class TabOrderFragment : BaseFragment<FragmentTabOrderBinding>() {
             }
         }
         //`feat: bổ sung quan sát dữ liệu đơn hàng và cập nhật trạng thái trong TabOrderFragment`
+        lifecycleScope.launch {
+            viewModel.stateComment.collect { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        loadingDialog?.cancel()
+                        commentDialog?.cancel()
+
+                        viewModel.resetStateComment()
+                    }
+
+                    UiState.Idle -> {
+                        commentDialog?.cancel()
+                        loadingDialog?.cancel()
+                    }
+
+                    UiState.Loading -> {
+                        commentDialog?.cancel()
+                        loadingDialog?.show()
+                    }
+
+                    is UiState.Success<*> -> {
+                        loadingDialog?.cancel()
+                        commentDialog?.cancel()
+                        requireContext().showToastOnce(getString(R.string.thanks_for_rating))
+
+                        viewModel.resetStateComment()
+                    }
+                }
+            }
+        }
+        //`feat: bổ sung xử lý trạng thái đánh giá đơn hàng trong TabOrderFragment`
+    }
 
 }
