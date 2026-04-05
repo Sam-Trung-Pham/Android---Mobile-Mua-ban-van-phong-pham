@@ -75,5 +75,36 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
         }
     }
     //`feat: bổ sung xử lý hiển thị và tìm kiếm sản phẩm trong SearchActivity`
+    override fun onClickViews() {
+        super.onClickViews()
 
+        binding.icBack.click { finish() }
+
+        binding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) =
+                viewModel.changeKeySearch(s?.toString())
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
+
+            override fun onTextChanged(
+                s: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) = Unit
+        })
+    }
+
+    override fun onDestroy() {
+        productAdapter?.list?.clear()
+        productAdapter = null
+
+        super.onDestroy()
+    }
+    //`feat: bổ sung xử lý tìm kiếm, sự kiện nhập liệu và giải phóng adapter trong SearchActivity`
 }
