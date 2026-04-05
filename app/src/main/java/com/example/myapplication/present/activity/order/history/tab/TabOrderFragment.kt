@@ -38,5 +38,41 @@ class TabOrderFragment : BaseFragment<FragmentTabOrderBinding>() {
     override fun inflateBinding(): FragmentTabOrderBinding =
         FragmentTabOrderBinding.inflate(layoutInflater)
     //`feat: thêm TabOrderFragment hiển thị và xử lý thao tác đơn hàng theo tab`
+    override fun initViews() {
+        super.initViews()
 
-}
+        index = arguments?.getInt(AppConst.KEY_ORDER_TYPE) ?: 0
+
+        loadingDialog = LoadingDialog(requireContext())
+
+        commentDialog = CommentDialog(
+            contextParams = requireContext(),
+            onLater = {
+
+            }, onRate = { stars, comment, orderId ->
+                viewModel.postComment(
+                    orderId = resOrder?._id ?: "",
+                    productIds = resOrder?.products?.map { it.productId?._id ?: "" } ?: emptyList(),
+                    stars = stars,
+                    comment = comment
+                )
+            }
+        )
+
+        reasonCancelDialog = ReasonCancelDialog(
+            contextParams = requireContext(),
+            onMessage = { message ->
+                if (message.isEmpty()) {
+                    requireContext().showToastOnce(getString(R.string.msg_input_null))
+                    return@ReasonCancelDialog
+                }
+
+                viewModel.cancelOrderUseCase(
+                    resOrder?._id ?: "",
+                    AppConst.STATUS_ORDER_TO_CANCELLED,
+                    message
+                )
+            }
+        )
+        //`feat: bổ sung khởi tạo dialog đánh giá và hủy đơn trong TabOrderFragment`
+        }
