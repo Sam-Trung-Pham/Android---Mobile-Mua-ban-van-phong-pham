@@ -36,5 +36,22 @@ class SettingViewModel @Inject constructor(
         }
     }
     //`feat: thêm SettingViewModel xử lý cập nhật số điện thoại và địa chỉ`
+    fun changeStateToIdle() {
+        _stateUpdatePhone.value = UiState.Idle
+    }
 
+    fun updateAddress(address: String) = launchIO {
+        val id =
+            Gson().fromJson(SharedPrefCommon.jsonAcc, ResLoginUserDTO::class.java)?.user?.id ?: ""
+        updateAddressUseCase.invoke(
+            id, ReqUpdateAddressDTO(address)
+        ).collect { state ->
+            _stateUpdateAddress.emit(state)
+        }
+    }
+
+    fun changeStateAddressToIdle() {
+        _stateUpdateAddress.value = UiState.Idle
+    }
+    //`feat: bổ sung xử lý cập nhật địa chỉ và reset trạng thái trong SettingViewModel`
 }
