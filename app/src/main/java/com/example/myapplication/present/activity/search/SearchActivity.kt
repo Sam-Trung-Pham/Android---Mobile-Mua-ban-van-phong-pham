@@ -47,4 +47,33 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>() {
         }
     }
     //`feat: thêm SearchActivity cho tìm kiếm sản phẩm`
+    override fun observerData() {
+        super.observerData()
+
+        lifecycleScope.launch {
+            viewModel.stateProduct.collect { list ->
+                binding.rcvProduct.visibleView()
+                binding.loadingView.goneView()
+
+                val listData = list.toListProductDataDTO()
+                viewModel.cacheListProduct(listData)
+                productAdapter?.submitData(listData)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.keySearch.collect { key ->
+                if (key.isEmpty()) productAdapter?.submitData(viewModel.listProduct.first())
+                else {
+                    val listTemp = viewModel.listProduct.first()
+                    val resultList =
+                        listTemp.filter { it.name?.lowercase()?.contains(key.lowercase()) == true }
+
+                    productAdapter?.submitData(resultList)
+                }
+            }
+        }
     }
+    //`feat: bổ sung xử lý hiển thị và tìm kiếm sản phẩm trong SearchActivity`
+
+}
