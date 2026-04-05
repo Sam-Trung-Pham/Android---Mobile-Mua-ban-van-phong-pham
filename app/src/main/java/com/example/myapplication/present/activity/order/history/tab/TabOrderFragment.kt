@@ -75,4 +75,24 @@ class TabOrderFragment : BaseFragment<FragmentTabOrderBinding>() {
             }
         )
         //`feat: bổ sung khởi tạo dialog đánh giá và hủy đơn trong TabOrderFragment`
-        }
+        confirmCancelOrderDialog = ConfirmCancelOrderDialog(
+            requireContext(),
+            {
+
+            }, {
+                reasonCancelDialog?.show()
+            }
+        )
+
+        confirmCompleteDialog = ConfirmCompleteDialog(
+            requireContext(),
+            {
+
+            }, {
+                viewModel.updateOrderUseCase(cacheId, AppConst.STATUS_ORDER_TO_COMPLETED)
+                requireContext().showToastOnce(getString(R.string.msg_confirm_success))
+            }
+        )
+        //`feat: bổ sung khởi tạo dialog xác nhận hủy và hoàn tất đơn hàng trong TabOrderFragment`
+
+}
