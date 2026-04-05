@@ -1,0 +1,50 @@
+package com.example.myapplication.present.activity.voucher
+
+import android.content.Intent
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.myapplication.R
+import com.example.myapplication.common.AppConst
+import com.example.myapplication.common.UiState
+import com.example.myapplication.common.base.BaseActivity
+import com.example.myapplication.common.base.ext.click
+import com.example.myapplication.common.base.ext.getRemainingTime
+import com.example.myapplication.common.base.ext.goneView
+import com.example.myapplication.common.base.ext.showToastOnce
+import com.example.myapplication.common.base.ext.visibleView
+import com.example.myapplication.databinding.ActivityVouchersBinding
+import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+class VouchersActivity : BaseActivity<ActivityVouchersBinding>() {
+
+    private val viewModel: VoucherViewModel by viewModels()
+
+    private var voucherAdapter: VoucherAdapter? = null
+
+    override fun getLayoutActivity(): Int = R.layout.activity_vouchers
+
+    override fun initViews() {
+        super.initViews()
+
+        binding.rcvVoucher.apply {
+            voucherAdapter = VoucherAdapter(
+                onSelected = { index, voucher ->
+                    voucherAdapter?.indexSelect = index
+
+                    binding.tvCountVoucher.visibleView()
+                    binding.tvMsgVoucherApplied.visibleView()
+                }
+            )
+
+            adapter = voucherAdapter
+        }
+
+        binding.tvCountVoucher.goneView()
+        binding.tvMsgVoucherApplied.goneView()
+    }
+    //`feat: thêm VouchersActivity hiển thị danh sách mã giảm giá`
+
+}
