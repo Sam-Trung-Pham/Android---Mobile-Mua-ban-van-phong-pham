@@ -121,5 +121,63 @@ class TabOrderFragment : BaseFragment<FragmentTabOrderBinding>() {
         }
     }
     //`feat: bổ sung khởi tạo OrderAdapter và xử lý thao tác đơn hàng trong TabOrderFragment`
+    private var cacheId: String = ""
+
+    override fun observeData() {
+        super.observeData()
+
+        lifecycleScope.launch {
+            viewModel.listOrder.collect { listOrder ->
+                val data = listOrder.filter {
+                    when (index) {
+                        0 -> it.status == AppConst.STATUS_ORDER_TO_PAY
+                        1 -> it.status == AppConst.STATUS_ORDER_TO_RECEIVE
+                        2 -> it.status == AppConst.STATUS_ORDER_TO_COMPLETED
+                        else -> it.status == AppConst.STATUS_ORDER_TO_CANCELLED
+                    }
+                }
+                orderAdapter?.comments = viewModel.state.value.listCommentCaches.toMutableList()
+                orderAdapter?.submitData(data.toListResOrderDTO())
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.uiStateUpdate.collect { uiState ->
+                when (uiState) {
+                    is UiState.Error -> {
+                        loadingDialog?.cancel()
+                        requireContext().showToastOnce(getString(R.string.msg_wrong))
+                        viewModel.changeStateUpdateToIdle()
+                    }
+
+                    UiState.Idle -> {}
+                    UiState.Loading -> {
+                        loadingDialog?.cancel()
+                    }
+
+                    is UiState.Success -> {
+                        loadingDialog?.cancel()
+
+                        val response = uiState.data
+                        val listOrderTemp = viewModel.listOrder.first().toListResOrderDTO()
+                        val indexResponse = listOrderTemp.indexOfFirst { it._id == response._id }
+
+                        if (indexResponse != -1) {
+                            val newList = listOrderTemp.toMutableList()
+                            newList[indexResponse] = newList[indexResponse].copy(
+                                status = response.status
+                            )
+                            viewModel.changeStateUpdateToIdle()
+
+                            return@collect
+                        }
+
+//                        requireContext().showToastOnce(getString(R.string.msg_wrong))
+                        viewModel.changeStateUpdateToIdle()
+                    }
+                }
+            }
+        }
+        //`feat: bổ sung quan sát dữ liệu đơn hàng và cập nhật trạng thái trong TabOrderFragment`
 
 }
