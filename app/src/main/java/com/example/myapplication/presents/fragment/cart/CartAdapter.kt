@@ -6,14 +6,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.databinding.ViewDataBinding
 import com.bumptech.glide.Glide
-import com.datn.bia.a.R
-import com.datn.bia.a.common.base.BaseRecyclerViewAdapter
-import com.datn.bia.a.common.base.ext.click
-import com.datn.bia.a.common.base.ext.formatVND
-import com.datn.bia.a.common.base.ext.goneView
-import com.datn.bia.a.common.base.ext.visibleView
-import com.datn.bia.a.databinding.ItemCartBinding
-import com.datn.bia.a.domain.model.domain.Cart
+import com.datn.R
+import com.datn.common.base.BaseRecyclerViewAdapter
+import com.datn.common.base.ext.click
+import com.datn.common.base.ext.formatVND
+import com.datn.common.base.ext.goneView
+import com.datn.common.base.ext.visibleView
+import com.datn.databinding.ItemCartBinding
+import com.datn.domain.model.domain.Cart
 
 class CartAdapter(
     private val contextParams: Context,
