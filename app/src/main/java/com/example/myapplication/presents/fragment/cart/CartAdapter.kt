@@ -117,4 +117,4 @@ class CartAdapter(
 
     fun getAllCartSelected() =
         list.filter { listCartSelected.contains(it.cartId) }
-}
+};
