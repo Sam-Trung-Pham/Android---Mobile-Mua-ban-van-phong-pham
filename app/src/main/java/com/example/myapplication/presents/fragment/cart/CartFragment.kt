@@ -373,4 +373,4 @@ class CartFragment : BaseFragment<FragmentCartBinding>() {
             )
         }
     )
-}
+};
