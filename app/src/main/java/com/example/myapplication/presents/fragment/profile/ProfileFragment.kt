@@ -133,4 +133,48 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                 putExtra(AppConst.KEY_ORDER_TYPE, 2)
             })
         }
+        @SuppressLint("SetTextI18n")
+        override fun observeData() {
+            super.observeData()
+
+            lifecycleScope.launch {
+                viewModel.state.collect { state ->
+                    binding.tvCountItemInCart.text =
+                        "${state.listCart.sumOf { it.quantity }} ${
+                            getString(
+                                if (state.listCart.sumOf { it.quantity } > 1) R.string.carts else R.string.cart
+                            )
+                        }"
+
+                    when (val response = state.uiState) {
+                        is UiState.Error -> {
+                            binding.tvCountItemHistory.goneView()
+                            viewModel.changeStateToIdle()
+                        }
+
+                        UiState.Idle -> {
+
+                        }
+
+                        UiState.Loading -> {
+                            binding.tvCountItemHistory.goneView()
+                        }
+
+                        is UiState.Success -> {
+                            val res = response.data.size
+                            binding.tvCountItemHistory.apply {
+                                text = "$res ${
+                                    getString(
+                                        if (res > 1) R.string.orders else R.string.order
+                                    )
+                                }"
+                                visibleView()
+                            }
+
+                            viewModel.changeStateToIdle()
+                        }
+                    }
+                }
+            }
+        }
     }}
