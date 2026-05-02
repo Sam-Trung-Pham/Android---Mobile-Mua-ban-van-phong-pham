@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "My Application"
+rootProject.name = "Ung Dung Ban Van Phong Pham SP26"
 include(":app")
